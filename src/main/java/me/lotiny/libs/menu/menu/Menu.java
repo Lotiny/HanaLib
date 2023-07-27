@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.lotiny.libs.chat.CC;
 import me.lotiny.libs.general.Tasks;
-import me.lotiny.libs.menu.MenuManager;
+import me.lotiny.libs.menu.MenuFramework;
 import me.lotiny.libs.menu.slots.Slot;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public abstract class Menu {
 
-    private final MenuManager menuManager = MenuManager.getMenuManager();
+    private final MenuFramework menuFramework = MenuFramework.getMenuFramework();
 
     @Getter
     private List<Slot> slots = new ArrayList<>();
@@ -29,10 +29,10 @@ public abstract class Menu {
     public abstract List<Slot> getSlots(Player player);
 
     public void open(Player player) {
-        Menu previous = menuManager.getOpenedMenu(player);
+        Menu previous = menuFramework.getOpenedMenu(player);
         if (previous != null) {
             previous.onClose(player);
-            menuManager.getOpenedMenus().remove(player.getUniqueId());
+            menuFramework.getOpenedMenus().remove(player.getUniqueId());
         }
 
         this.slots = this.getSlots(player);
@@ -45,7 +45,7 @@ public abstract class Menu {
 
         Tasks.run(() -> {
             player.closeInventory();
-            menuManager.getOpenedMenus().put(player.getUniqueId(), this);
+            menuFramework.getOpenedMenus().put(player.getUniqueId(), this);
             player.openInventory(inventory);
 
             onOpen(player);
@@ -62,7 +62,7 @@ public abstract class Menu {
         }
 
         Inventory inventory;
-        Menu currentlyOpenedMenu = menuManager.getOpenedMenu(player);
+        Menu currentlyOpenedMenu = menuFramework.getOpenedMenu(player);
         Inventory current = player.getOpenInventory().getTopInventory();
 
         boolean passed = currentlyOpenedMenu != null && CC.translate(currentlyOpenedMenu.getName(player))
@@ -76,7 +76,7 @@ public abstract class Menu {
 
         getContents(player, inventory);
 
-        menuManager.getOpenedMenus().put(player.getUniqueId(), this);
+        menuFramework.getOpenedMenus().put(player.getUniqueId(), this);
 
         if (passed) {
             player.updateInventory();

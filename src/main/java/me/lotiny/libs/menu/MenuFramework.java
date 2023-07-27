@@ -17,16 +17,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class MenuManager implements Listener {
+public class MenuFramework implements Listener {
 
     @Getter
-    public static MenuManager menuManager;
+    public static MenuFramework menuFramework;
 
     @Getter
     public Map<UUID, Menu> openedMenus = new HashMap<>();
 
-    public MenuManager() {
-        menuManager = this;
+    public MenuFramework() {
+        menuFramework = this;
 
         run();
         Bukkit.getPluginManager().registerEvents(this, HanaLib.getInstance());
