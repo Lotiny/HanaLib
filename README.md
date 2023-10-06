@@ -14,7 +14,8 @@
 
 - ItemBuilder
 - Cooldown
-- Menu Framework
+- Menu
+- Command
 - ConfigFile
 - Scoreboard (Credit go to Assemble https://github.com/ThatKawaiiSam/Assemble)
 - and more!
@@ -55,16 +56,37 @@ dependencies {
 ### Example usage
 
 #### Setup HanaLib
+
 ```java
+import me.lotiny.libs.HanaLib;
+
+import java.util.Arrays;
+
 public class ExampleClass extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // Initialize the HanaLib
-        HanaLib.init(this);
+        HanaLib hanaLib = new HanaLib(this);
+        // Register command handler.
+        hanaLib.registerCommandHandler();
+        // Register menu handler.
+        hanaLib.registerMenuHandler();
 
-        // Then if you want to use MenuFramework
-        new MenuFramework();
+        // Register commands.
+        registerCommands(hanaLib);
+    }
+
+    private void registerCommands(HanaLib hanaLib) {
+        Arrays.asList(
+                new ExampleCommand1(),
+                new ExampleCommand2(),
+                new ExampleCommand3(),
+                new ExampleCommand4(),
+                // ...
+                new ExampleCommand99()
+        ).forEach(command -> {
+            hanaLib.getCommandHandler().register(command);
+        });
     }
 }
 ```
@@ -72,7 +94,19 @@ public class ExampleClass extends JavaPlugin {
 #### Menu
 
 ```java
-public class ExampleMenu extends Menu implements Listener {
+import me.lotiny.libs.chat.CC;
+import me.lotiny.libs.general.ItemBuilder;
+import me.lotiny.libs.menu.menu.Menu;
+import me.lotiny.libs.menu.slots.Slot;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ExampleMenu extends Menu {
 
     @Override
     public String getName(Player player) {
@@ -80,14 +114,15 @@ public class ExampleMenu extends Menu implements Listener {
     }
 
     @Override
-    public List<Slot> getSlots() {
+    public List<Slot> getSlots(Player player) {
         List<Slot> slots = new ArrayList<>();
 
-        // Added Get Diamond slot.
         slots.add(new Slot() {
             @Override
             public ItemStack getItem(Player player) {
-                return new ItemBuilder(Material.DIAMOND).setName("Get Diamond").toItemStack();
+                return new ItemBuilder(Material.CARROT)
+                        .setName("TEST ITEM")
+                        .toItemStack();
             }
 
             @Override
@@ -97,14 +132,36 @@ public class ExampleMenu extends Menu implements Listener {
 
             @Override
             public void onClick(Player player, int slot, ClickType clickType) {
-                player.getInventory().addItem(new ItemStack(Material.DIAMOND));
+                player.sendMessage(CC.GREEN + "CLICKED TEST ITEM!");
             }
         });
 
-        // Fill menu with Glass.
-        Slot.fillGlass(slots, 27);
-
         return slots;
+    }
+}
+```
+
+#### Command
+
+```java
+import me.lotiny.libs.command.Command;
+import me.lotiny.libs.command.CommandArgs;
+import me.lotiny.libs.command.HanaCommand;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+
+public class ExampleCommand extends HanaCommand {
+
+    @Override
+    @Command(name = "example", aliases = {"ex1", "ex2"}, usage = "/example",
+            permission = "cmd.example", inGameOnly = false)
+    public void execute(CommandArgs commandArgs) {
+        Player player = commandArgs.getPlayer();
+        String[] args = commandArgs.getArgs();
+
+        // Open ExampleMenu
+        new ExampleMenu().open(player);
+        player.playSound(player.getLocation(), Sound.CHEST_OPEN, 1, 1);
     }
 }
 ```

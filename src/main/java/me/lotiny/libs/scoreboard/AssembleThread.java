@@ -1,6 +1,6 @@
 package me.lotiny.libs.scoreboard;
 
-import me.lotiny.libs.utils.BukkitUtil;
+import me.lotiny.libs.utils.ServerUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Objective;
@@ -25,7 +25,7 @@ public class AssembleThread extends Thread {
 
     @Override
     public void run() {
-        while(true) {
+        while (true) {
             try {
                 tick();
                 sleep(assemble.getTicks() * 50);
@@ -39,7 +39,7 @@ public class AssembleThread extends Thread {
      * Tick logic for thread.
      */
     private void tick() {
-        for (Player player : BukkitUtil.getOnlinePlayers()) {
+        for (Player player : ServerUtil.getOnlinePlayers()) {
             try {
                 AssembleBoard board = this.assemble.getBoards().get(player.getUniqueId());
 
@@ -120,7 +120,7 @@ public class AssembleThread extends Thread {
                 }
 
                 this.assemble.getAdapter().onScoreboardUpdate(player, board);
-            } catch(Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 throw new AssembleException("There was an error updating " + player.getName() + "'s scoreboard.");
             }

@@ -10,6 +10,12 @@ import java.util.Collection;
 @UtilityClass
 public class EffectSerialization {
 
+    /**
+     * Serialize a collection of `PotionEffect` objects to a string.
+     *
+     * @param effects The collection of `PotionEffect` objects to serialize.
+     * @return A serialized string representation of the effects.
+     */
     public String serilizeEffects(Collection<PotionEffect> effects) {
         StringBuilder builder = new StringBuilder();
         for (PotionEffect potionEffect : effects) {
@@ -19,6 +25,12 @@ public class EffectSerialization {
         return builder.toString();
     }
 
+    /**
+     * Deserialize a serialized string representation of effects back to a collection of `PotionEffect` objects.
+     *
+     * @param source The serialized string containing effect information.
+     * @return A collection of `PotionEffect` objects, or `null` if the source is invalid.
+     */
     public Collection<PotionEffect> deserilizeEffects(String source) {
         if (!source.contains(":")) {
             return null;
@@ -33,6 +45,12 @@ public class EffectSerialization {
         return effects;
     }
 
+    /**
+     * Serialize a `PotionEffect` object to a string.
+     *
+     * @param potionEffect The `PotionEffect` object to serialize.
+     * @return A serialized string representation of the `PotionEffect`.
+     */
     public String serilizePotionEffect(PotionEffect potionEffect) {
         StringBuilder builder = new StringBuilder();
 
@@ -43,7 +61,7 @@ public class EffectSerialization {
         builder.append("n@").append(name);
 
         String duration = String.valueOf(potionEffect.getDuration());
-        builder.append(":d@").append(String.valueOf(duration));
+        builder.append(":d@").append(duration);
 
         String amplifier = String.valueOf(potionEffect.getAmplifier());
         builder.append(":a@").append(amplifier);
@@ -51,6 +69,12 @@ public class EffectSerialization {
         return builder.toString();
     }
 
+    /**
+     * Deserialize a serialized string representation of a `PotionEffect` back to a `PotionEffect` object.
+     *
+     * @param source The serialized string containing effect information.
+     * @return A `PotionEffect` object, or `null` if the source is invalid.
+     */
     public PotionEffect deserilizePotionEffect(String source) {
         String name = "";
         String duration = "";

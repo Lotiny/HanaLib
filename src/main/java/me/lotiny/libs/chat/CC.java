@@ -6,8 +6,6 @@ import java.util.*;
 
 public class CC {
 
-    private static final Map<String, ChatColor> MAP;
-
     public static final String BLUE;
     public static final String AQUA;
     public static final String YELLOW;
@@ -33,6 +31,7 @@ public class CC {
     public static final String MENU_BAR;
     public static final String CHAT_BAR;
     public static final String SB_BAR;
+    private static final Map<String, ChatColor> MAP;
 
     static {
         MAP = new HashMap<>();

@@ -22,11 +22,11 @@ import java.util.Base64;
 public class BukkitSerialization {
 
     /**
-     * Converts the player inventory to a String array of Base64 strings. First string is the content and second string is the armor.
+     * Serialize a player's inventory (including armor) to a pair of base64 strings.
      *
-     * @param playerInventory to turn into an array of strings.
-     * @return Array of strings: [ main content, armor content ]
-     * @throws IllegalStateException
+     * @param playerInventory The player's inventory to serialize.
+     * @return An array of two base64 strings: content and armor.
+     * @throws IllegalStateException If an error occurs during serialization.
      */
     public String[] playerInventoryToBase64(PlayerInventory playerInventory) throws IllegalStateException {
         //get the main content part, this doesn't return the armor
@@ -37,15 +37,11 @@ public class BukkitSerialization {
     }
 
     /**
-     * A method to serialize an {@link ItemStack} array to Base64 String.
-     * <p>
-     * <p/>
-     * <p>
-     * Based off of {@link #toBase64(Inventory)}.
+     * Serialize an array of ItemStacks to a base64 string.
      *
-     * @param items to turn into a Base64 String.
-     * @return Base64 string of the items.
-     * @throws IllegalStateException
+     * @param items The array of ItemStacks to serialize.
+     * @return A base64 string representing the serialized items.
+     * @throws IllegalStateException If an error occurs during serialization.
      */
     public String itemStackArrayToBase64(ItemStack[] items) throws IllegalStateException {
         try {
@@ -69,18 +65,11 @@ public class BukkitSerialization {
     }
 
     /**
-     * A method to serialize an inventory to Base64 string.
-     * <p>
-     * <p/>
-     * <p>
-     * Special thanks to Comphenix in the Bukkit forums or also known
-     * as aadnk on GitHub.
+     * Serialize an inventory to a base64 string.
      *
-     * <a href="https://gist.github.com/aadnk/8138186">Original Source</a>
-     *
-     * @param inventory to serialize
-     * @return Base64 string of the provided inventory
-     * @throws IllegalStateException
+     * @param inventory The inventory to serialize.
+     * @return A base64 string representing the serialized inventory.
+     * @throws IllegalStateException If an error occurs during serialization.
      */
     public String toBase64(Inventory inventory) throws IllegalStateException {
         try {
@@ -104,18 +93,11 @@ public class BukkitSerialization {
     }
 
     /**
-     * A method to get an {@link Inventory} from an encoded, Base64, string.
-     * <p>
-     * <p/>
-     * <p>
-     * Special thanks to Comphenix in the Bukkit forums or also known
-     * as aadnk on GitHub.
+     * Deserialize an inventory from a base64 string.
      *
-     * <a href="https://gist.github.com/aadnk/8138186">Original Source</a>
-     *
-     * @param data Base64 string of data containing an inventory.
-     * @return Inventory created from the Base64 string.
-     * @throws IOException
+     * @param data The base64 string representing the serialized inventory.
+     * @return The deserialized inventory.
+     * @throws IOException If an error occurs during deserialization.
      */
     public Inventory fromBase64(String data) throws IOException {
         try {
@@ -136,15 +118,11 @@ public class BukkitSerialization {
     }
 
     /**
-     * Gets an array of ItemStacks from Base64 string.
-     * <p>
-     * <p/>
-     * <p>
-     * Base off of {@link #fromBase64(String)}.
+     * Deserialize an array of ItemStacks from a base64 string.
      *
-     * @param data Base64 string to convert to ItemStack array.
-     * @return ItemStack array created from the Base64 string.
-     * @throws IOException
+     * @param data The base64 string representing the serialized ItemStacks.
+     * @return The deserialized array of ItemStacks.
+     * @throws IOException If an error occurs during deserialization.
      */
     public ItemStack[] itemStackArrayFromBase64(String data) throws IOException {
         try {
@@ -164,6 +142,13 @@ public class BukkitSerialization {
         }
     }
 
+    /**
+     * Convert a RenderedImage to a base64 string.
+     *
+     * @param img        The RenderedImage to convert.
+     * @param formatName The format name (e.g., "PNG").
+     * @return A base64 string representing the image.
+     */
     public String imgToBase64String(RenderedImage img, final String formatName) {
         final ByteArrayOutputStream os = new ByteArrayOutputStream();
 
@@ -175,6 +160,12 @@ public class BukkitSerialization {
         }
     }
 
+    /**
+     * Convert a base64 string to a BufferedImage.
+     *
+     * @param base64String The base64 string representing the image.
+     * @return The deserialized BufferedImage.
+     */
     public BufferedImage base64StringToImg(final String base64String) {
         try {
             return ImageIO.read(new ByteArrayInputStream(Base64.getDecoder().decode(base64String)));

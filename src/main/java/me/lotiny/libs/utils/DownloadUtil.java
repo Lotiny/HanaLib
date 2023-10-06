@@ -16,6 +16,15 @@ import java.nio.file.Files;
 @UtilityClass
 public class DownloadUtil {
 
+    /**
+     * Download and load a Maven dependency JAR file.
+     *
+     * @param repository The Maven repository URL (or null for default Maven Central).
+     * @param groupId    The Maven group ID.
+     * @param artifactId The Maven artifact ID.
+     * @param version    The version of the dependency.
+     * @throws IOException If an error occurs during download or loading.
+     */
     public void downloadMavenDependency(String repository, String groupId, String artifactId, String version) {
         File pluginFolder = HanaLib.getInstance().getDataFolder();
         File libsFolder = new File(pluginFolder, "libs");
@@ -27,7 +36,7 @@ public class DownloadUtil {
         if (file.exists()) {
             loadJARFile(file);
         } else {
-            BukkitUtil.log("&aStarting download " + file.getName() + "...");
+            ServerUtil.log("&aStarting download " + file.getName() + "...");
 
             try {
                 String jarUrl;
@@ -63,11 +72,11 @@ public class DownloadUtil {
                 long endTime = System.currentTimeMillis();
                 long downloadDuration = endTime - startTime;
 
-                BukkitUtil.log("&aDownload completed! &b" + formatDuration(downloadDuration) + "s");
+                ServerUtil.log("&aDownload completed! &b" + formatDuration(downloadDuration) + "s");
 
                 loadJARFile(file);
             } catch (IOException e) {
-                BukkitUtil.log("&cFailed to download or load the JAR file: " + file.getName());
+                ServerUtil.log("&cFailed to download or load the JAR file: " + file.getName());
                 e.printStackTrace();
             }
         }
@@ -87,7 +96,7 @@ public class DownloadUtil {
             addURLMethod.setAccessible(true);
             addURLMethod.invoke(classLoader, file.toURI().toURL());
         } catch (Exception e) {
-            BukkitUtil.log("&cFailed to use the JAR file: " + file.getName());
+            ServerUtil.log("&cFailed to use the JAR file: " + file.getName());
             e.printStackTrace();
         }
     }

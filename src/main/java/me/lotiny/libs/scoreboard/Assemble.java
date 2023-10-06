@@ -1,109 +1,105 @@
 package me.lotiny.libs.scoreboard;
 
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-
-import me.lotiny.libs.HanaLib;
-import me.lotiny.libs.scoreboard.events.AssembleBoardCreateEvent;
 import lombok.Getter;
 import lombok.Setter;
-
-import me.lotiny.libs.utils.BukkitUtil;
+import me.lotiny.libs.HanaLib;
+import me.lotiny.libs.scoreboard.events.AssembleBoardCreateEvent;
+import me.lotiny.libs.utils.ServerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
-import org.bukkit.plugin.java.JavaPlugin;
 
-@Getter @Setter
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
+@Getter
+@Setter
 public class Assemble {
 
-	private AssembleAdapter adapter;
-	private AssembleThread thread;
-	private AssembleListener listeners;
-	private AssembleStyle assembleStyle = AssembleStyle.MODERN;
+    private final ChatColor[] chatColorCache = ChatColor.values();
+    private AssembleAdapter adapter;
+    private AssembleThread thread;
+    private AssembleListener listeners;
+    private AssembleStyle assembleStyle = AssembleStyle.MODERN;
+    private Map<UUID, AssembleBoard> boards;
+    private long ticks = 2;
+    private boolean hook = false, debugMode = true, callEvents = true;
 
-	private Map<UUID, AssembleBoard> boards;
+    /**
+     * Assemble.
+     *
+     * @param adapter that is being provided.
+     */
+    public Assemble(AssembleAdapter adapter) {
+        this.adapter = adapter;
+        this.boards = new ConcurrentHashMap<>();
 
-	private long ticks = 2;
-	private boolean hook = false, debugMode = true, callEvents = true;
+        this.setup();
+    }
 
-	private final ChatColor[] chatColorCache = ChatColor.values();
+    /**
+     * Setup Assemble.
+     */
+    public void setup() {
+        // Register Events.
+        this.listeners = new AssembleListener(this);
+        Bukkit.getServer().getPluginManager().registerEvents(listeners, HanaLib.getInstance());
 
-	/**
-	 * Assemble.
-	 *
-	 * @param adapter that is being provided.
-	 */
-	public Assemble(AssembleAdapter adapter) {
-		this.adapter = adapter;
-		this.boards = new ConcurrentHashMap<>();
+        // Ensure that the thread has stopped running.
+        if (this.thread != null) {
+            this.thread.stop();
+            this.thread = null;
+        }
 
-		this.setup();
-	}
+        // Register new boards for existing online players.
+        for (Player player : ServerUtil.getOnlinePlayers()) {
 
-	/**
-	 * Setup Assemble.
-	 */
-	public void setup() {
-		// Register Events.
-		this.listeners = new AssembleListener(this);
-		Bukkit.getServer().getPluginManager().registerEvents(listeners, HanaLib.getInstance());
+            // Call Events if enabled.
+            if (this.isCallEvents()) {
+                AssembleBoardCreateEvent createEvent = new AssembleBoardCreateEvent(player);
 
-		// Ensure that the thread has stopped running.
-		if (this.thread != null) {
-			this.thread.stop();
-			this.thread = null;
-		}
+                Bukkit.getPluginManager().callEvent(createEvent);
+                if (createEvent.isCancelled()) {
+                    continue;
+                }
+            }
 
-		// Register new boards for existing online players.
-		for (Player player : BukkitUtil.getOnlinePlayers()) {
+            getBoards().putIfAbsent(player.getUniqueId(), new AssembleBoard(player, this));
+        }
 
-			// Call Events if enabled.
-			if (this.isCallEvents()) {
-				AssembleBoardCreateEvent createEvent = new AssembleBoardCreateEvent(player);
+        // Start Thread.
+        this.thread = new AssembleThread(this);
+    }
 
-				Bukkit.getPluginManager().callEvent(createEvent);
-				if (createEvent.isCancelled()) {
-					continue;
-				}
-			}
+    /**
+     * Cleanup Assemble.
+     */
+    public void cleanup() {
+        // Stop thread.
+        if (this.thread != null) {
+            this.thread.stop();
+            this.thread = null;
+        }
 
-			getBoards().putIfAbsent(player.getUniqueId(), new AssembleBoard(player, this));
-		}
+        // Unregister listeners.
+        if (listeners != null) {
+            HandlerList.unregisterAll(listeners);
+            listeners = null;
+        }
 
-		// Start Thread.
-		this.thread = new AssembleThread(this);
-	}
+        // Destroy player scoreboards.
+        for (UUID uuid : getBoards().keySet()) {
+            Player player = Bukkit.getPlayer(uuid);
 
-	/**
-	 * Cleanup Assemble.
-	 */
-	public void cleanup() {
-		// Stop thread.
-		if (this.thread != null) {
-			this.thread.stop();
-			this.thread = null;
-		}
+            if (player == null || !player.isOnline()) {
+                continue;
+            }
 
-		// Unregister listeners.
-		if (listeners != null) {
-			HandlerList.unregisterAll(listeners);
-			listeners = null;
-		}
-
-		// Destroy player scoreboards.
-		for (UUID uuid : getBoards().keySet()) {
-			Player player = Bukkit.getPlayer(uuid);
-
-			if (player == null || !player.isOnline()) {
-				continue;
-			}
-
-			getBoards().remove(uuid);
-			player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-		}
-	}
+            getBoards().remove(uuid);
+            player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+        }
+    }
 
 }

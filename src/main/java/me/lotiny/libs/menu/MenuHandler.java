@@ -4,7 +4,7 @@ import lombok.Getter;
 import me.lotiny.libs.HanaLib;
 import me.lotiny.libs.menu.menu.Menu;
 import me.lotiny.libs.menu.slots.Slot;
-import me.lotiny.libs.utils.BukkitUtil;
+import me.lotiny.libs.utils.ServerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,16 +17,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class MenuFramework implements Listener {
+public class MenuHandler implements Listener {
 
     @Getter
-    public static MenuFramework menuFramework;
+    public static MenuHandler menuHandler;
 
     @Getter
     public Map<UUID, Menu> openedMenus = new HashMap<>();
 
-    public MenuFramework() {
-        menuFramework = this;
+    public MenuHandler() {
+        menuHandler = this;
 
         run();
         Bukkit.getPluginManager().registerEvents(this, HanaLib.getInstance());
@@ -36,7 +36,7 @@ public class MenuFramework implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                BukkitUtil.getOnlinePlayers().forEach(player -> {
+                ServerUtil.getOnlinePlayers().forEach(player -> {
                     Menu menu = getOpenedMenu(player);
                     if (menu != null && menu.isUpdateInTask()) {
                         menu.update(player);

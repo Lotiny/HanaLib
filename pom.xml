@@ -6,7 +6,7 @@
 
     <groupId>me.lotiny</groupId>
     <artifactId>HanaLib</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -14,19 +14,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>papermc</id>
-            <url>https://papermc.io/repo/repository/maven-public/</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <dependency>
-            <groupId>com.destroystokyo.paper</groupId>
-            <artifactId>paper-api</artifactId>
-            <version>1.16.5-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api-1_8</artifactId>
+            <version>1.8.8</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/spigot-1.8.8.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

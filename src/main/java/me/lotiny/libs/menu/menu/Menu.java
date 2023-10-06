@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.lotiny.libs.chat.CC;
 import me.lotiny.libs.general.Tasks;
-import me.lotiny.libs.menu.MenuFramework;
+import me.lotiny.libs.menu.MenuHandler;
 import me.lotiny.libs.menu.slots.Slot;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public abstract class Menu {
 
-    private final MenuFramework menuFramework = MenuFramework.getMenuFramework();
+    private final MenuHandler menuHandler = MenuHandler.getMenuHandler();
 
     @Getter
     private List<Slot> slots = new ArrayList<>();
@@ -29,10 +29,14 @@ public abstract class Menu {
     public abstract List<Slot> getSlots(Player player);
 
     public void open(Player player) {
-        Menu previous = menuFramework.getOpenedMenu(player);
+        if (menuHandler == null) {
+            throw new NullPointerException("The Menu Handler doesn't registered yet.");
+        }
+
+        Menu previous = menuHandler.getOpenedMenu(player);
         if (previous != null) {
             previous.onClose(player);
-            menuFramework.getOpenedMenus().remove(player.getUniqueId());
+            menuHandler.getOpenedMenus().remove(player.getUniqueId());
         }
 
         this.slots = this.getSlots(player);
@@ -45,7 +49,7 @@ public abstract class Menu {
 
         Tasks.run(() -> {
             player.closeInventory();
-            menuFramework.getOpenedMenus().put(player.getUniqueId(), this);
+            menuHandler.getOpenedMenus().put(player.getUniqueId(), this);
             player.openInventory(inventory);
 
             onOpen(player);
@@ -62,7 +66,7 @@ public abstract class Menu {
         }
 
         Inventory inventory;
-        Menu currentlyOpenedMenu = menuFramework.getOpenedMenu(player);
+        Menu currentlyOpenedMenu = menuHandler.getOpenedMenu(player);
         Inventory current = player.getOpenInventory().getTopInventory();
 
         boolean passed = currentlyOpenedMenu != null && CC.translate(currentlyOpenedMenu.getName(player))
@@ -76,7 +80,7 @@ public abstract class Menu {
 
         getContents(player, inventory);
 
-        menuFramework.getOpenedMenus().put(player.getUniqueId(), this);
+        menuHandler.getOpenedMenus().put(player.getUniqueId(), this);
 
         if (passed) {
             player.updateInventory();

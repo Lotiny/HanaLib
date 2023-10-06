@@ -18,6 +18,23 @@ public abstract class PaginatedMenu extends Menu {
     @Getter
     private int page = 1;
 
+    private static Sound getSoundOr(String source, String or) {
+        try {
+            return Sound.valueOf(source);
+        } catch (Exception e) {
+            return getSoundOr(or, "CLICK");
+        }
+    }
+
+    private static boolean doesSoundExists(String source) {
+        try {
+            Sound.valueOf(source);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     @Override
     public List<Slot> getSlots(Player player) {
         List<Slot> slots = new ArrayList<>();
@@ -197,23 +214,6 @@ public abstract class PaginatedMenu extends Menu {
         @Override
         public int[] getSlots() {
             return null;
-        }
-    }
-
-    private static Sound getSoundOr(String source, String or) {
-        try {
-            return Sound.valueOf(source);
-        } catch (Exception e) {
-            return getSoundOr(or, "CLICK");
-        }
-    }
-
-    private static boolean doesSoundExists(String source) {
-        try {
-            Sound.valueOf(source);
-            return true;
-        } catch (Exception e) {
-            return false;
         }
     }
 }
