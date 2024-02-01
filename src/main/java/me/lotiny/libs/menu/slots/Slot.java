@@ -1,6 +1,6 @@
 package me.lotiny.libs.menu.slots;
 
-import me.lotiny.libs.general.ItemBuilder;
+import me.lotiny.libs.utils.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;

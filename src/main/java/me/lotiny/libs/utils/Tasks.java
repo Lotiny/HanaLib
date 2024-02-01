@@ -1,4 +1,4 @@
-package me.lotiny.libs.general;
+package me.lotiny.libs.utils;
 
 import lombok.experimental.UtilityClass;
 import me.lotiny.libs.HanaLib;

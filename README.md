@@ -95,7 +95,7 @@ public class ExampleClass extends JavaPlugin {
 
 ```java
 import me.lotiny.libs.chat.CC;
-import me.lotiny.libs.general.ItemBuilder;
+import me.lotiny.libs.utils.ItemBuilder;
 import me.lotiny.libs.menu.menu.Menu;
 import me.lotiny.libs.menu.slots.Slot;
 import org.bukkit.Material;

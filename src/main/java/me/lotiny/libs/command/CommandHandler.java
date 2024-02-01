@@ -18,9 +18,6 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
 
     private final JavaPlugin plugin = HanaLib.getInstance();
 
-    public static String NO_PERM = CC.RED + "You don't have permission to execute this command.";
-    public static String ONLY_PLAYER = CC.RED + "Only player can execute this command.";
-
     private final Map<String, HanaCommand> commands = new HashMap<>();
 
     protected CommandMap commandMap;
@@ -89,12 +86,12 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
         HanaCommand cmd = commands.get(command.getName());
 
         if (cmd.getCommand().inGameOnly() && commandSender instanceof ConsoleCommandSender) {
-            commandSender.sendMessage(ONLY_PLAYER);
+            commandSender.sendMessage(CC.translate(CommandErrorMessage.ONLY_PLAYER.getMessage()));
             return true;
         }
 
         if (cmd.getCommand().permission() != null && !cmd.getCommand().permission().isEmpty() && !commandSender.hasPermission(cmd.getCommand().permission())) {
-            commandSender.sendMessage(NO_PERM);
+            commandSender.sendMessage(CC.translate(CommandErrorMessage.NO_PERM.getMessage()));
             return true;
         }
 
@@ -111,6 +108,12 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
             toReturn.addAll(getDefaultTabComplete(new CommandArgs(commandSender, null, strings)));
         }
 
+        Collections.sort(toReturn);
+
         return toReturn;
+    }
+
+    public void setErrorMessage(CommandErrorMessage commandErrorMessage, String message) {
+        commandErrorMessage.setMessage(message);
     }
 }

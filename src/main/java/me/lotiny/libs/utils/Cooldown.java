@@ -1,4 +1,4 @@
-package me.lotiny.libs.general;
+package me.lotiny.libs.utils;
 
 import lombok.Getter;
 import lombok.Setter;

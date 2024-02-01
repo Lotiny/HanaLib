@@ -1,4 +1,4 @@
-package me.lotiny.libs.general;
+package me.lotiny.libs.utils;
 
 import me.lotiny.libs.chat.CC;
 import org.bukkit.Color;

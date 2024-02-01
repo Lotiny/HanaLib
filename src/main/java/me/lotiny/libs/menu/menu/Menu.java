@@ -3,10 +3,11 @@ package me.lotiny.libs.menu.menu;
 import lombok.Getter;
 import lombok.Setter;
 import me.lotiny.libs.chat.CC;
-import me.lotiny.libs.general.Tasks;
+import me.lotiny.libs.utils.Tasks;
 import me.lotiny.libs.menu.MenuHandler;
 import me.lotiny.libs.menu.slots.Slot;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
@@ -86,6 +87,14 @@ public abstract class Menu {
             player.updateInventory();
         } else {
             Tasks.run(() -> player.openInventory(inventory));
+        }
+    }
+
+    public void playClickSound(Player player) {
+        try {
+            player.playSound(player.getLocation(), Sound.valueOf("CLICK"), 1, 1);
+        } catch (Exception e) {
+            player.playSound(player.getLocation(), Sound.valueOf("UI_BUTTON_CLICK"), 1, 1);
         }
     }
 

@@ -1,4 +1,4 @@
-package me.lotiny.libs.elo;
+package me.lotiny.libs.utils.elo;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

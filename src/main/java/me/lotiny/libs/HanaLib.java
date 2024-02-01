@@ -2,7 +2,15 @@ package me.lotiny.libs;
 
 import lombok.Getter;
 import me.lotiny.libs.command.CommandHandler;
+import me.lotiny.libs.hotbar.HotbarHandler;
 import me.lotiny.libs.menu.MenuHandler;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 @Getter
@@ -13,8 +21,9 @@ public class HanaLib {
     @Getter
     private static JavaPlugin instance;
 
-    private CommandHandler commandHandler;
-    private MenuHandler menuHandler;
+    private final CommandHandler commandHandler;
+    private final MenuHandler menuHandler;
+    private final HotbarHandler hotbarHandler;
 
     /**
      * Constructor for the HanaLib class.
@@ -32,19 +41,9 @@ public class HanaLib {
 
         hanaLib = this;
         instance = plugin;
-    }
 
-    /**
-     * Registers a CommandHandler instance.
-     */
-    public void registerCommandHandler() {
         commandHandler = new CommandHandler();
-    }
-
-    /**
-     * Registers a MenuHandler instance.
-     */
-    public void registerMenuHandler() {
         menuHandler = new MenuHandler();
+        hotbarHandler = new HotbarHandler();
     }
 }
