@@ -11,12 +11,14 @@ public class HotbarItem {
     private final ItemStack item;
     private final String permission;
     private final String clickCommand;
+    private final String action;
 
-    public HotbarItem(int slot, ItemStack item, String permission, String clickCommand) {
+    public HotbarItem(int slot, ItemStack item, String permission, String clickCommand, String action) {
         this.slot = slot;
         this.item = item;
         this.permission = permission;
         this.clickCommand = clickCommand;
+        this.action = action;
 
         HanaLib.getHanaLib().getHotbarHandler().getItems().add(this);
     }

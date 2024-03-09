@@ -1,11 +1,22 @@
 package me.lotiny.libs.hotbar.item;
 
+import me.lotiny.libs.HanaLib;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.PlayerInventory;
 
 import java.util.List;
 
-public abstract class Hotbar {
+public abstract class Hotbar implements Listener {
+
+    public Hotbar() {
+        if (hasListeners()) {
+            Bukkit.getPluginManager().registerEvents(this, HanaLib.getInstance());
+        }
+    }
+
+    public abstract boolean hasListeners();
 
     public abstract List<HotbarItem> getItems();
 
