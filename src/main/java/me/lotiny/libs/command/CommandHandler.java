@@ -86,12 +86,12 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
         HanaCommand cmd = commands.get(command.getName());
 
         if (cmd.getCommand().inGameOnly() && commandSender instanceof ConsoleCommandSender) {
-            commandSender.sendMessage(CC.translate(CommandErrorMessage.ONLY_PLAYER.getMessage()));
+            commandSender.sendMessage(CC.RED + "Only player can execute this command.");
             return true;
         }
 
         if (cmd.getCommand().permission() != null && !cmd.getCommand().permission().isEmpty() && !commandSender.hasPermission(cmd.getCommand().permission())) {
-            commandSender.sendMessage(CC.translate(CommandErrorMessage.NO_PERM.getMessage()));
+            commandSender.sendMessage(CC.RED + "No Permission.");
             return true;
         }
 
@@ -111,9 +111,5 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
         Collections.sort(toReturn);
 
         return toReturn;
-    }
-
-    public void setErrorMessage(CommandErrorMessage commandErrorMessage, String message) {
-        commandErrorMessage.setMessage(message);
     }
 }

@@ -3,7 +3,6 @@
 <div>
 
 [![](https://jitpack.io/v/Lotiny/HanaLib.svg)](https://jitpack.io/#Lotiny/HanaLib)
-[![Discord](https://img.shields.io/discord/1061534844494028830.svg?color=lime&label=Discord)](https://discord.gg/qBqQYgRHaF)
 [![Donation](https://img.shields.io/badge/Donation-PayPal-blue)](https://www.paypal.com/paypalme/Lotiny2825)
 
 </div>
@@ -17,7 +16,7 @@
 - Menu
 - Command
 - ConfigFile
-- Scoreboard (Credit go to Assemble https://github.com/ThatKawaiiSam/Assemble)
+- MongoDB
 - and more!
 
 ---
@@ -62,15 +61,12 @@ import me.lotiny.libs.HanaLib;
 
 import java.util.Arrays;
 
-public class ExampleClass extends JavaPlugin {
+public class MainClass extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        // Init HanaLib
         HanaLib hanaLib = new HanaLib(this);
-        // Register command handler.
-        hanaLib.registerCommandHandler();
-        // Register menu handler.
-        hanaLib.registerMenuHandler();
 
         // Register commands.
         registerCommands(hanaLib);
@@ -84,9 +80,7 @@ public class ExampleClass extends JavaPlugin {
                 new ExampleCommand4(),
                 // ...
                 new ExampleCommand99()
-        ).forEach(command -> {
-            hanaLib.getCommandHandler().register(command);
-        });
+        ).forEach(command -> hanaLib.getCommandHandler().register(command));
     }
 }
 ```
@@ -133,6 +127,9 @@ public class ExampleMenu extends Menu {
             @Override
             public void onClick(Player player, int slot, ClickType clickType) {
                 player.sendMessage(CC.GREEN + "CLICKED TEST ITEM!");
+                
+                // Play Sound.CLICK to player.
+                playClickSound(player);
             }
         });
 
@@ -162,6 +159,38 @@ public class ExampleCommand extends HanaCommand {
         // Open ExampleMenu
         new ExampleMenu().open(player);
         player.playSound(player.getLocation(), Sound.CHEST_OPEN, 1, 1);
+    }
+}
+```
+
+#### MongoDB
+
+```java
+import com.mongodb.client.MongoCollection;
+import lombok.Getter;
+import me.lotiny.libs.database.Mongo;
+import me.lotiny.libs.database.MongoCredentials;
+import me.lotiny.libs.utils.ServerUtil;
+import me.lotiny.uhc.HanaUHC;
+import org.bson.Document;
+import org.bukkit.Bukkit;
+
+@Getter
+public class ExampleMongoDB extends Mongo {
+
+    private final MongoCollection<Document> collection;
+
+    public MongoManager() {
+        super(MongoCredentials.of(
+                "mongodb://localhost:27017",
+                "database_name"
+        ));
+
+        // Connect to database.
+        connect();
+
+        // Set the collection.
+        this.collection = this.getDatabase().getCollection("collection_name");
     }
 }
 ```

@@ -26,7 +26,50 @@ public class ConfigFile extends YamlConfiguration {
 
         // If the file does not exist in the data folder, attempt to save it from resources.
         if (!this.file.exists()) {
-            HanaLib.getInstance().saveResource(name, false);
+            try {
+                HanaLib.getInstance().saveResource(name, false);
+            } catch (Exception ex) {
+                try {
+                    this.file.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        try {
+            // Load the configuration from the file.
+            this.load(this.file);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Create a `ConfigFile` object with the specified name.
+     *
+     * @param path The path where configuration file.
+     * @param name The name of the configuration file.
+     */
+    public ConfigFile(String path, String name) {
+        File folder = new File(HanaLib.getInstance().getDataFolder(), path);
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
+
+        this.file = new File(folder, name);
+
+        // If the file does not exist in the data folder, attempt to save it from resources.
+        if (!this.file.exists()) {
+            try {
+                HanaLib.getInstance().saveResource(path + "/" + name, false);
+            } catch (Exception ex) {
+                try {
+                    this.file.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         try {

@@ -38,4 +38,12 @@ public class ServerUtil {
     public List<Player> getOnlinePlayers() {
         return new ArrayList<>(Bukkit.getServer().getOnlinePlayers());
     }
+
+    /**
+     * Disable the plugin.
+     */
+    public void disablePlugin() {
+        Bukkit.getServer().getScheduler().cancelTasks(HanaLib.getInstance());
+        Bukkit.getServer().getPluginManager().disablePlugin(HanaLib.getInstance());
+    }
 }

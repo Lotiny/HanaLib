@@ -2,8 +2,8 @@ package me.lotiny.libs.menu.menu;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.lotiny.libs.utils.ItemBuilder;
 import me.lotiny.libs.menu.slots.Slot;
+import me.lotiny.libs.utils.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
